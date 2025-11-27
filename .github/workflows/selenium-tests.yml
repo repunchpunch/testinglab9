@@ -16,26 +16,26 @@ jobs:
       - name: Install Firefox ESR + Geckodriver
         run: |
           sudo apt update
-          # Только действительно нужные либы (без libasound2 и прочего мусора)
-          sudo apt install -y libdbus-glib-1-2 libgtk-3-0 libxt6
+          sudo apt install -y wget bzip2 libdbus-glib-1-2 libgtk-3-0 libxt6
 
-          # Firefox ESR 128.19.0 (последняя на ноябрь 2025)
-          wget -q https://archive.mozilla.org/pub/firefox/releases/128.19.0esr/linux-x86_64/en-US/firefox-128.19.0esr.tar.bz2
-          sudo tar xjf firefox-128.19.0esr.tar.bz2 -C /opt/
+          # Firefox ESR 140.5.0 (актуальная на ноябрь 2025)
+          wget -q "https://ftp.mozilla.org/pub/firefox/releases/140.5.0esr/linux-x86_64/en-US/firefox-140.5.0esr.tar.bz2" -O firefox.tar.bz2
+          sudo rm -rf /opt/firefox
+          sudo tar xjf firefox.tar.bz2 -C /opt/
           sudo ln -sf /opt/firefox/firefox /usr/local/bin/firefox
-          rm firefox-128.19.0esr.tar.bz2
+          rm firefox.tar.bz2
 
-          # Geckodriver 0.35.0 (поддерживает Firefox 128+)
-          wget -q https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux64.tar.gz
-          tar -xzf geckodriver-v0.35.0-linux64.tar.gz
-          sudo mv geckodriver /usr/local/bin/
+          # Geckodriver 0.35.0 (совместим с ESR 140)
+          wget -q "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux64.tar.gz" -O geckodriver.tar.gz
+          tar -xzf geckodriver.tar.gz
+          sudo mv geckodriver /usr/local/bin/geckodriver
           sudo chmod +x /usr/local/bin/geckodriver
-          rm geckodriver-v0.35.0-linux64.tar.gz
+          rm geckodriver.tar.gz
 
           echo "Firefox version:"
-          firefox --version
+          /usr/local/bin/firefox --version
           echo "Geckodriver version:"
-          geckodriver --version
+          /usr/local/bin/geckodriver --version
 
       - name: Install Python deps
         run: |
