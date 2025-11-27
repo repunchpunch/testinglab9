@@ -1,13 +1,46 @@
 name: Selenium Tests
+
 on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: seleniarm/standalone-firefox:latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install deps + run tests
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Firefox ESR + Geckodriver
         run: |
+          sudo apt update
+          # Только действительно нужные либы (без libasound2 и прочего мусора)
+          sudo apt install -y libdbus-glib-1-2 libgtk-3-0 libxt6
+
+          # Firefox ESR 128.19.0 (последняя на ноябрь 2025)
+          wget -q https://archive.mozilla.org/pub/firefox/releases/128.19.0esr/linux-x86_64/en-US/firefox-128.19.0esr.tar.bz2
+          sudo tar xjf firefox-128.19.0esr.tar.bz2 -C /opt/
+          sudo ln -sf /opt/firefox/firefox /usr/local/bin/firefox
+          rm firefox-128.19.0esr.tar.bz2
+
+          # Geckodriver 0.35.0 (поддерживает Firefox 128+)
+          wget -q https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux64.tar.gz
+          tar -xzf geckodriver-v0.35.0-linux64.tar.gz
+          sudo mv geckodriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/geckodriver
+          rm geckodriver-v0.35.0-linux64.tar.gz
+
+          echo "Firefox version:"
+          firefox --version
+          echo "Geckodriver version:"
+          geckodriver --version
+
+      - name: Install Python deps
+        run: |
+          pip install --upgrade pip
           pip install -r requirements.txt
-          pytest tests/test_contact_form.py -v
+
+      - name: Run tests
+        run: pytest tests/test_contact_form.py -v --tb=short
