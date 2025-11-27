@@ -17,10 +17,10 @@ jobs:
         run: |
           echo "Starting Firefox + Geckodriver installation..."
           sudo apt update
-          sudo apt install -y wget bzip2 libdbus-glib-1-2 libgtk-3-0 libxt6 libx11-xcb1 libxtst6
+          sudo apt install -y wget bzip2 libdbus-glib-1-2 libgtk-3-0 libxt6 libx11-xcb1 libxtst6 libasound2 libdrm2 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libxss1 libnss3 libnspr4 libatk1.0-0 libatspi2.0-0
           
-          echo "Downloading Firefox ESR 140.5.0..."
-          wget -q "https://ftp.mozilla.org/pub/firefox/releases/140.5.0esr/linux-x86_64/en-US/firefox-140.5.0esr.tar.bz2" -O firefox.tar.bz2
+          echo "Downloading Firefox ESR 128.19.0esr..."
+          wget -q "https://archive.mozilla.org/pub/firefox/releases/128.19.0esr/linux-x86_64/en-US/firefox-128.19.0esr.tar.bz2" -O firefox.tar.bz2
           
           echo "Extracting Firefox..."
           sudo rm -rf /opt/firefox
