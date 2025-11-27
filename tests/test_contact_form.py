@@ -2,25 +2,28 @@ import pytest
 import os
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
-from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.firefox.options import Options
 from pages.contact_page import ContactPage
-
 
 @pytest.fixture(scope="session")
 def driver():
-    service = Service(GeckoDriverManager().install())
-    options = webdriver.FirefoxOptions()
-    
+    options = Options()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
     options.add_argument("--window-size=1920,1080")
+    
+    options.set_preference("marionette.port", 2828)
+    options.set_preference("webdriver_accept_untrusted_certs", True)
+    options.set_preference("webdriver_assume_untrusted_issuer", True)
 
+    service = Service("/usr/local/bin/geckodriver")
+    
     driver = webdriver.Firefox(service=service, options=options)
     driver.maximize_window()
     yield driver
     driver.quit()
-
 
 @pytest.fixture
 def contact_page(driver):

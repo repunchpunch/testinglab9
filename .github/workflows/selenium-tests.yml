@@ -13,16 +13,25 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Firefox + geckodriver
-        uses: browser-actions/setup-firefox@v1
-        with:
-          firefox-version: '115.0'
+      - name: Install Firefox and Geckodriver
+        run: |
+          sudo apt update
+          sudo apt install -y wget bzip2
+          wget -q https://download.mozilla.org/?product=firefox-115.0esr-ssl&os=linux64&lang=en-US -O firefox.tar.bz2
+          sudo rm -rf /opt/firefox
+          sudo tar xjf firefox.tar.bz2 -C /opt/
+          sudo ln -sf /opt/firefox/firefox /usr/local/bin/firefox
+          sudo rm firefox.tar.bz2
 
-      - name: Install geckodriver
-        uses: browser-actions/setup-geckodriver@v1
+          wget -q https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
+          sudo tar -xzf geckodriver-v0.33.0-linux64.tar.gz -C /usr/local/bin/
+          sudo chmod +x /usr/local/bin/geckodriver
+          rm geckodriver-v0.33.0-linux64.tar.gz
 
       - name: Install Python deps
-        run: pip install -r requirements.txt
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run tests
-        run: pytest -v
+        run: pytest tests/test_contact_form.py -v --tb=short
