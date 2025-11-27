@@ -18,14 +18,14 @@ jobs:
           sudo apt update
           sudo apt install -y wget bzip2 libdbus-glib-1-2 libgtk-3-0 libxt6
 
-          # Firefox ESR 140.5.0 (актуальная на ноябрь 2025)
-          wget -q "https://ftp.mozilla.org/pub/firefox/releases/140.5.0esr/linux-x86_64/en-US/firefox-140.5.0esr.tar.bz2" -O firefox.tar.bz2
+          # Firefox ESR 128.14.0 (последняя на ноябрь 2025)
+          wget -q "https://ftp.mozilla.org/pub/firefox/releases/128.14.0esr/linux-x86_64/en-US/firefox-128.14.0esr.tar.bz2" -O firefox.tar.bz2
           sudo rm -rf /opt/firefox
           sudo tar xjf firefox.tar.bz2 -C /opt/
           sudo ln -sf /opt/firefox/firefox /usr/local/bin/firefox
           rm firefox.tar.bz2
 
-          # Geckodriver 0.35.0 (совместим с ESR 140)
+          # Geckodriver 0.35.0 (совместим с ESR 128.14)
           wget -q "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux64.tar.gz" -O geckodriver.tar.gz
           tar -xzf geckodriver.tar.gz
           sudo mv geckodriver /usr/local/bin/geckodriver

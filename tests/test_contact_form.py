@@ -17,7 +17,7 @@ def driver():
     options.set_preference("marionette.port", 2828)
     options.set_preference("webdriver_accept_untrusted_certs", True)
     options.set_preference("webdriver_assume_untrusted_issuer", True)
-    options.set_preference("fission.autostart", False)  # отключить site isolation (помогает в headless)
+    options.set_preference("fission.autostart", False)
 
     service = Service("/usr/local/bin/geckodriver")
     
