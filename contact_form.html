@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контактная форма</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 8px; }
+        .error { color: red; font-size: 0.9em; display: none; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Обратная связь</h1>
+    <form id="contactForm" novalidate>
+        <div class="form-group">
+            <label for="fullName">ФИО *</label>
+            <input type="text" id="fullName" data-test="fullName" required>
+            <div class="error" id="fullNameError">Пожалуйста, введите ФИО (минимум 5 символов)</div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" data-test="email" required>
+            <div class="error" id="emailError">Введите корректный email</div>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Телефон *</label>
+            <input type="tel" id="phone" data-test="phone" placeholder="+7 (999) 123-45-67" required>
+            <div class="error" id="phoneError">Телефон должен соответствовать формату +7 (XXX) XXX-XX-XX</div>
+        </div>
+
+        <div class="form-group">
+            <label for="subject">Тема обращения *</label>
+            <select id="subject" data-test="subject" required>
+                <option value="">-- Выберите тему --</option>
+                <option value="support">Техническая поддержка</option>
+                <option value="billing">Вопрос по оплате</option>
+                <option value="other">Другое</option>
+            </select>
+            <div class="error" id="subjectError">Выберите тему обращения</div>
+        </div>
+
+        <button type="submit" data-test="submitButton">Отправить</button>
+        <div id="formResult"></div>
+    </form>
+
+    <script>
+        const form = document.getElementById('contactForm');
+        const resultDiv = document.getElementById('formResult');
+
+        // Регулярка для российского номера
+        const phoneRegex = /^\+7\s?\(\d{3}\)\s?\d{3}-\d{2}-\d{2}$/;
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+
+            // Сброс ошибок
+            document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+            resultDiv.textContent = '';
+            resultDiv.className = '';
+
+            // Валидация ФИО
+            const fullName = document.getElementById('fullName').value.trim();
+            if (fullName.length < 5) {
+                document.getElementById('fullNameError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Валидация Email
+            const email = document.getElementById('email').value.trim();
+            if (!email.includes('@') || !email.includes('.')) {
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Валидация телефона
+            const phone = document.getElementById('phone').value.trim();
+            if (!phoneRegex.test(phone)) {
+                document.getElementById('phoneError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Валидация темы
+            const subject = document.getElementById('subject').value;
+            if (!subject) {
+                document.getElementById('subjectError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isValid) {
+                resultDiv.textContent = 'Форма успешно отправлена!';
+                resultDiv.className = 'success';
+            }
+        });
+    </script>
+</body>
+</html>
