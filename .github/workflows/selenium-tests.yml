@@ -17,19 +17,19 @@ jobs:
         run: |
           echo "Starting Firefox + Geckodriver installation..."
           sudo apt update
-          sudo apt install -y wget bzip2
+          sudo apt install -y wget bzip2 libdbus-glib-1-2 libgtk-3-0 libxt6 libx11-xcb1 libxtst6
           
-          echo "Downloading Firefox ESR 115.26.0..."
-          wget -q "https://ftp.mozilla.org/pub/firefox/releases/115.26.0esr/linux-x86_64/en-US/firefox-115.26.0esr.tar.bz2" -O firefox.tar.bz2
+          echo "Downloading Firefox ESR 140.5.0..."
+          wget -q "https://ftp.mozilla.org/pub/firefox/releases/140.5.0esr/linux-x86_64/en-US/firefox-140.5.0esr.tar.bz2" -O firefox.tar.bz2
           
           echo "Extracting Firefox..."
           sudo rm -rf /opt/firefox
           sudo tar xjf firefox.tar.bz2 -C /opt/
           sudo ln -sf /opt/firefox/firefox /usr/local/bin/firefox
-          sudo rm firefox.tar.bz2
+          rm firefox.tar.bz2
           
-          echo "Downloading geckodriver 0.33.0..."
-          wget -q "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz" -O geckodriver.tar.gz
+          echo "Downloading geckodriver 0.35.0..."
+          wget -q "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux64.tar.gz" -O geckodriver.tar.gz
           tar -xzf geckodriver.tar.gz
           sudo mv geckodriver /usr/local/bin/geckodriver
           sudo chmod +x /usr/local/bin/geckodriver
