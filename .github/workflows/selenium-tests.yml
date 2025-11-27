@@ -1,49 +1,13 @@
 name: Selenium Tests
-
 on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    container: seleniarm/standalone-firefox:latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Firefox and Geckodriver
+      - name: Install deps + run tests
         run: |
-          echo "Starting Firefox + Geckodriver installation..."
-          sudo apt update
-          sudo apt install -y wget bzip2 libdbus-glib-1-2 libgtk-3-0 libxt6 libx11-xcb1 libxtst6 libasound2 libdrm2 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libxss1 libnss3 libnspr4 libatk1.0-0 libatspi2.0-0
-          
-          echo "Downloading Firefox ESR 128.19.0esr..."
-          wget -q "https://archive.mozilla.org/pub/firefox/releases/128.19.0esr/linux-x86_64/en-US/firefox-128.19.0esr.tar.bz2" -O firefox.tar.bz2
-          
-          echo "Extracting Firefox..."
-          sudo rm -rf /opt/firefox
-          sudo tar xjf firefox.tar.bz2 -C /opt/
-          sudo ln -sf /opt/firefox/firefox /usr/local/bin/firefox
-          rm firefox.tar.bz2
-          
-          echo "Downloading geckodriver 0.35.0..."
-          wget -q "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux64.tar.gz" -O geckodriver.tar.gz
-          tar -xzf geckodriver.tar.gz
-          sudo mv geckodriver /usr/local/bin/geckodriver
-          sudo chmod +x /usr/local/bin/geckodriver
-          rm geckodriver.tar.gz
-          
-          echo "Verification: Firefox version"
-          firefox --version
-          echo "Verification: Geckodriver version"
-          geckodriver --version
-
-      - name: Install Python deps
-        run: |
-          pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Run tests
-        run: pytest tests/test_contact_form.py -v --tb=short
+          pytest tests/test_contact_form.py -v
