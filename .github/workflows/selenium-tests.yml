@@ -1,44 +1,28 @@
 name: Selenium Tests
 
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install Firefox
-        run: |
-          sudo apt update
-          sudo apt install -y firefox
+      - name: Install Firefox + geckodriver
+        uses: browser-actions/setup-firefox@v1
+        with:
+          firefox-version: '115.0'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - name: Install geckodriver
+        uses: browser-actions/setup-geckodriver@v1
+
+      - name: Install Python deps
+        run: pip install -r requirements.txt
 
       - name: Run tests
-        run: |
-          pytest tests/test_contact_form.py -v --tb=short
-
-      - name: Upload test results (optional)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pytest-results
-          path: |
-            *.png
-            *.log
-            htmlcov/
+        run: pytest -v
