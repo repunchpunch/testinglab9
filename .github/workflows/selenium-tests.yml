@@ -15,18 +15,30 @@ jobs:
 
       - name: Install Firefox and Geckodriver
         run: |
+          echo "Starting Firefox + Geckodriver installation..."
           sudo apt update
           sudo apt install -y wget bzip2
-          wget -q https://download.mozilla.org/?product=firefox-115.0esr-ssl&os=linux64&lang=en-US -O firefox.tar.bz2
+          
+          echo "Downloading Firefox ESR 115.26.0..."
+          wget -q "https://ftp.mozilla.org/pub/firefox/releases/115.26.0esr/linux-x86_64/en-US/firefox-115.26.0esr.tar.bz2" -O firefox.tar.bz2
+          
+          echo "Extracting Firefox..."
           sudo rm -rf /opt/firefox
           sudo tar xjf firefox.tar.bz2 -C /opt/
           sudo ln -sf /opt/firefox/firefox /usr/local/bin/firefox
           sudo rm firefox.tar.bz2
-
-          wget -q https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
-          sudo tar -xzf geckodriver-v0.33.0-linux64.tar.gz -C /usr/local/bin/
+          
+          echo "Downloading geckodriver 0.33.0..."
+          wget -q "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz" -O geckodriver.tar.gz
+          tar -xzf geckodriver.tar.gz
+          sudo mv geckodriver /usr/local/bin/geckodriver
           sudo chmod +x /usr/local/bin/geckodriver
-          rm geckodriver-v0.33.0-linux64.tar.gz
+          rm geckodriver.tar.gz
+          
+          echo "Verification: Firefox version"
+          firefox --version
+          echo "Verification: Geckodriver version"
+          geckodriver --version
 
       - name: Install Python deps
         run: |
